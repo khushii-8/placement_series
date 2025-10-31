@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+using namespace std;
+// 1️⃣ Smaller Element on Left
+vector<int> smallerElementOnLeft(vector<int> &arr) {
+    int n = arr.size();
+    vector<int> result(n, -1);
+    stack<int> st;  // will store elements
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && st.top() >= arr[i])
+            st.pop();
+        if (!st.empty())
+            result[i] = st.top();
+        st.push(arr[i]);
+    }
+    return result;
+}
+// 2️⃣ Valid Parentheses
+bool isValidParentheses(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[')
+            st.push(c);
+        else {
+            if (st.empty()) return false;
+            char top = st.top();
+            st.pop();
+            if ((c == ')' && top != '(') ||
+                (c == '}' && top != '{') ||
+                (c == ']' && top != '['))
+                return false;
+        }
+    }
+    return st.empty();
+}
+// 3️⃣ Evaluate Postfix Expression
+int evaluatePostfix(string exp) {
+    stack<int> st;
+
+    for (char c : exp) {
+        if (isdigit(c)) {
+            st.push(c - '0');  // convert char to int
+        } else {
+            int val2 = st.top(); st.pop();
+            int val1 = st.top(); st.pop();
+
+            switch (c) {
+                case '+': st.push(val1 + val2); break;
+                case '-': st.push(val1 - val2); break;
+                case '*': st.push(val1 * val2); break;
+                case '/': st.push(val1 / val2); break;
+            }
+        }
+    }
+    return st.top();
+
+int main() {
+    // 🔸 1️⃣ Smaller Element on Left
+    vector<int> arr = {4, 5, 2, 10, 8};
+    vector<int> res = smallerElementOnLeft(arr);
+
+    cout << "=== Smaller Element on Left ===\n";
+    cout << "Array: ";
+    for (int x : arr) cout << x << " ";
+    cout << "\nResult: ";
+    for (int x : res) cout << x << " ";
+    cout << "\n\n";
+
+    // 🔸 2️⃣ Valid Parentheses
+    cout << "=== Valid Parentheses ===\n";
+    string s1 = "{[()]}";
+    string s2 = "{[(])}";
+    cout << s1 << " -> " << (isValidParentheses(s1) ? "Valid" : "Invalid") << endl;
+    cout << s2 << " -> " << (isValidParentheses(s2) ? "Valid" : "Invalid") << endl;
+    cout << "\n";
+
+    // 🔸 3️⃣ Evaluate Postfix Expression
+    cout << "=== Evaluate Postfix Expression ===\n";
+    string exp = "231*+9-"; // equivalent to (2 + (3 * 1)) - 9 = -4
+    cout << "Postfix Expression: " << exp << endl;
+    cout << "Result: " << evaluatePostfix(exp) << endl;
+
+    return 0;
+}
