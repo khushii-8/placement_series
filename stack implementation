@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Stack Implementation using Array
+
+class Stack {
+    int *arr;
+    int top;
+    int capacity;
+
+public:
+    Stack(int size) {
+        arr = new int[size];
+        capacity = size;
+        top = -1;
+    }
+
+    // Push element into stack
+    void push(int x) {
+        if (top == capacity - 1) {
+            cout << "Stack Overflow\n";
+            return;
+        }
+        arr[++top] = x;
+    }
+
+    // Pop element from stack
+    void pop() {
+        if (top == -1) {
+            cout << "Stack Underflow\n";
+            return;
+        }
+        top--;
+    }
+
+    // Get top element
+    int peek() {
+        if (top == -1) {
+            cout << "Stack is Empty\n";
+            return -1;
+        }
+        return arr[top];
+    }
+
+    // Check if stack is empty
+    bool isEmpty() {
+        return top == -1;
+    }
+
+    // Display stack elements
+    void display() {
+        if (top == -1) {
+            cout << "Stack is Empty\n";
+            return;
+        }
+        cout << "Stack elements: ";
+        for (int i = 0; i <= top; i++)
+            cout << arr[i] << " ";
+        cout << endl;
+    }
+};
+
+// 2️⃣ Next Greater Element using Stack
+
+vector<int> nextGreaterElement(vector<int> &nums) {
+    int n = nums.size();
+    vector<int> nge(n, -1);  // initialize with -1
+    stack<int> st;           // store indexes
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && nums[i] > nums[st.top()]) {
+            nge[st.top()] = nums[i];
+            st.pop();
+        }
+        st.push(i);
+    }
+    return nge;
+}
+
+int main() {
+    cout << "=== Stack Implementation using Array ===\n";
+    Stack s(5);
+
+    s.push(10);
+    s.push(20);
+    s.push(30);
+    s.display();
+
+    cout << "Top Element: " << s.peek() << endl;
+
+    s.pop();
+    s.display();
+
+    cout << "\n=== Next Greater Element ===\n";
+    vector<int> arr = {4, 5, 2, 25};
+    vector<int> res = nextGreaterElement(arr);
+
+    cout << "Array: ";
+    for (int x : arr) cout << x << " ";
+    cout << "\nNext Greater Elements: ";
+    for (int x : res) cout << x << " ";
+    cout << endl;
+
+    return 0;
+}
