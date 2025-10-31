@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Node structure
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) {
+        data = val;
+        next = NULL;
+    }
+};
+
+// Utility: Print linked list
+void printList(Node* head) {
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " -> ";
+        temp = temp->next;
+    }
+    cout << "NULL\n";
+}
+Node* reverseList(Node* head) {
+    Node* prev = NULL;
+    Node* curr = head;
+
+    while (curr != NULL) {
+        Node* nextNode = curr->next;  // store next
+        curr->next = prev;            // reverse pointer
+        prev = curr;                  // move prev forward
+        curr = nextNode;              // move curr forward
+    }
+    return prev;  // new head
+}
+Node* findMiddle(Node* head) {
+    if (head == NULL) return NULL;
+
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;         // move 1 step
+        fast = fast->next->next;   // move 2 steps
+    }
+    return slow; // slow will be at middle
+}
+
+Node* mergeSortedLists(Node* l1, Node* l2) {
+    // Base cases
+    if (!l1) return l2;
+    if (!l2) return l1;
+
+    Node* result = NULL;
+
+    if (l1->data <= l2->data) {
+        result = l1;
+        result->next = mergeSortedLists(l1->next, l2);
+    } else {
+        result = l2;
+        result->next = mergeSortedLists(l1, l2->next);
+    }
+    return result;
+}
+int main() {
+    // 🔸 Creating Linked List 1
+    Node* head1 = new Node(10);
+    head1->next = new Node(20);
+    head1->next->next = new Node(30);
+    head1->next->next->next = new Node(40);
+
+    cout << "Original Linked List:\n";
+    printList(head1);
+
+    // 1️⃣ Reverse the Linked List
+    head1 = reverseList(head1);
+    cout << "\nReversed Linked List:\n";
+    printList(head1);
+
+    // 2️⃣ Find the Middle Node
+    Node* middle = findMiddle(head1);
+    cout << "\nMiddle Node Value: " << middle->data << endl;
+
+    // 3️⃣ Merge Two Sorted Linked Lists
+    Node* list1 = new Node(1);
+    list1->next = new Node(3);
+    list1->next->next = new Node(5);
+
+    Node* list2 = new Node(2);
+    list2->next = new Node(4);
+    list2->next->next = new Node(6);
+
+    cout << "\nList 1: ";
+    printList(list1);
+    cout << "List 2: ";
+    printList(list2);
+
+    Node* merged = mergeSortedLists(list1, list2);
+    cout << "\nMerged Sorted Linked List:\n";
+    printList(merged);
+
+    return 0;
+}
