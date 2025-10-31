@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Find Pivot Index (using recursion)
+int findPivotIndex(vector<int> &arr, int low, int high) {
+    if (low > high) return -1;
+    int mid = (low + high) / 2;
+
+    // Check if mid is pivot
+    if (mid < high && arr[mid] > arr[mid + 1])
+        return mid;
+    if (mid > low && arr[mid] < arr[mid - 1])
+        return mid - 1;
+
+    // Search in left or right
+    if (arr[low] >= arr[mid])
+        return findPivotIndex(arr, low, mid - 1);
+    return findPivotIndex(arr, mid + 1, high);
+}
+
+// 2️⃣ Remove Duplicates from String
+string removeDuplicates(string s, int i = 0, string ans = "", unordered_set<char> seen = {}) {
+    if (i == s.size()) return ans;
+    if (seen.find(s[i]) == seen.end()) {
+        seen.insert(s[i]);
+        ans += s[i];
+    }
+    return removeDuplicates(s, i + 1, ans, seen);
+}
+
+// 3️⃣ Fibonacci Number using Recursion
+int fibonacci(int n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+// 4️⃣ Tower of Hanoi + Recursion Tree visualization
+void towerOfHanoi(int n, char from, char to, char aux, string indent = "") {
+    // Print recursion tree structure (indent visualization)
+    cout << indent << "towerOfHanoi(" << n << ", " << from << ", " << to << ", " << aux << ")\n";
+    
+    if (n == 1) {
+        cout << indent << "Move disk 1 from " << from << " -> " << to << "\n";
+        return;
+    }
+
+    towerOfHanoi(n - 1, from, aux, to, indent + "  ");
+    cout << indent << "Move disk " << n << " from " << from << " -> " << to << "\n";
+    towerOfHanoi(n - 1, aux, to, from, indent + "  ");
+}
+
+int main() {
+    // 1️⃣ Pivot index
+    vector<int> arr = {4, 5, 6, 7, 0, 1, 2};
+    int pivot = findPivotIndex(arr, 0, arr.size() - 1);
+    cout << "Pivot index: " << pivot << " (Value: " << arr[pivot] << ")\n\n";
+
+    // 2️⃣ Remove duplicates
+    string s = "aabbccddeeffg";
+    cout << "Original string: " << s << endl;
+    cout << "After removing duplicates: " << removeDuplicates(s) << "\n\n";
+
+    // 3️⃣ Fibonacci number
+    int n = 6;
+    cout << "Fibonacci of " << n << " = " << fibonacci(n) << "\n\n";
+
+    // 4️⃣ Tower of Hanoi (with recursion tree)
+    int disks = 3;
+    cout << "Tower of Hanoi for " << disks << " disks:\n";
+    towerOfHanoi(disks, 'A', 'C', 'B');
+
+    return 0;
+}
