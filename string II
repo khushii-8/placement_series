@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    string str;
+    cout << "Enter a string: ";
+    getline(cin, str);
+
+    // 1️⃣ Calculate frequency of each character
+    map<char, int> freq;
+    for (char c : str) {
+        if (c != ' ')  // ignoring spaces
+            freq[c]++;
+    }
+
+    cout << "\nCharacter frequencies:\n";
+    for (auto it : freq)
+        cout << it.first << " -> " << it.second << endl;
+
+    // 2️⃣ Find maximum occurring character
+    char maxChar = ' ';
+    int maxCount = 0;
+    for (auto it : freq) {
+        if (it.second > maxCount) {
+            maxCount = it.second;
+            maxChar = it.first;
+        }
+    }
+    cout << "\nMaximum occurring character: '" << maxChar << "' occurs " << maxCount << " times.\n";
+
+    // 3️⃣ Remove duplicate characters
+    string result = "";
+    set<char> seen;
+    for (char c : str) {
+        if (c != ' ' && seen.find(c) == seen.end()) {
+            result += c;
+            seen.insert(c);
+        }
+    }
+    cout << "\nString after removing duplicates: " << result << endl;
+
+    // 4️⃣ Count number of words
+    stringstream ss(str);
+    string word;
+    int wordCount = 0;
+    while (ss >> word) wordCount++;
+
+    cout << "\nNumber of words in string: " << wordCount << endl;
+
+    return 0;
+}
