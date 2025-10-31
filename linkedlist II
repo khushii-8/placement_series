@@ -1,0 +1,135 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Node structure
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) {
+        data = val;
+        next = NULL;
+    }
+};
+
+// Utility: Print linked list
+void printList(Node* head) {
+    while (head != NULL) {
+        cout << head->data << " -> ";
+        head = head->next;
+    }
+    cout << "NULL\n";
+}
+// 1️⃣ Add Two Numbers Represented by Linked Lists
+Node* addTwoNumbers(Node* l1, Node* l2) {
+    Node* dummy = new Node(0);
+    Node* temp = dummy;
+    int carry = 0;
+
+    while (l1 != NULL || l2 != NULL || carry) {
+        int sum = 0;
+        if (l1) { sum += l1->data; l1 = l1->next; }
+        if (l2) { sum += l2->data; l2 = l2->next; }
+
+        sum += carry;
+        carry = sum / 10;
+
+        temp->next = new Node(sum % 10);
+        temp = temp->next;
+    }
+
+    return dummy->next;
+}
+// 2️⃣ Rotate Linked List (Right Rotation by k places)
+
+Node* rotateList(Node* head, int k) {
+    if (!head || k == 0) return head;
+
+    // Compute length
+    Node* temp = head;
+    int len = 1;
+    while (temp->next) {
+        temp = temp->next;
+        len++;
+    }
+
+    // Connect tail to head to make circular
+    temp->next = head;
+    k = k % len;
+    int stepsToNewHead = len - k;
+
+    Node* newTail = temp;
+    while (stepsToNewHead--) {
+        newTail = newTail->next;
+    }
+
+    Node* newHead = newTail->next;
+    newTail->next = NULL;
+
+    return newHead;
+}
+// 3️⃣ Remove Duplicates from Sorted Linked List
+Node* removeDuplicates(Node* head) {
+    Node* curr = head;
+    while (curr && curr->next) {
+        if (curr->data == curr->next->data) {
+            Node* duplicate = curr->next;
+            curr->next = curr->next->next;
+            delete duplicate;
+        } else {
+            curr = curr->next;
+        }
+    }
+    return head;
+}
+
+// Main Function
+int main() {
+    // 🔸 1️⃣ Add Two Numbers Example
+    Node* num1 = new Node(2);
+    num1->next = new Node(4);
+    num1->next->next = new Node(3); // represents 342
+
+    Node* num2 = new Node(5);
+    num2->next = new Node(6);
+    num2->next->next = new Node(4); // represents 465
+
+    cout << "First Number: ";
+    printList(num1);
+    cout << "Second Number: ";
+    printList(num2);
+
+    Node* sum = addTwoNumbers(num1, num2);
+    cout << "\nSum (as Linked List): ";
+    printList(sum); // expected 7 -> 0 -> 8 (807)
+
+    // 🔸 2️⃣ Rotate Linked List Example
+    Node* head = new Node(10);
+    head->next = new Node(20);
+    head->next->next = new Node(30);
+    head->next->next->next = new Node(40);
+    head->next->next->next->next = new Node(50);
+
+    cout << "\nOriginal List: ";
+    printList(head);
+
+    head = rotateList(head, 2);
+    cout << "After Rotating by 2: ";
+    printList(head);
+
+    // 🔸 3️⃣ Remove Duplicates Example
+    Node* sorted = new Node(1);
+    sorted->next = new Node(1);
+    sorted->next->next = new Node(2);
+    sorted->next->next->next = new Node(3);
+    sorted->next->next->next->next = new Node(3);
+
+    cout << "\nOriginal Sorted List: ";
+    printList(sorted);
+
+    sorted = removeDuplicates(sorted);
+    cout << "After Removing Duplicates: ";
+    printList(sorted);
+
+    return 0;
+}
