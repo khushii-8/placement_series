@@ -1,0 +1,110 @@
+#include <bits/stdc++.h>
+using namespace std;
+// 1️⃣ Min Stack Implementation
+
+class MinStack {
+    stack<int> s, minS;
+public:
+    void push(int val) {
+        s.push(val);
+        if (minS.empty() || val <= minS.top())
+            minS.push(val);
+    }
+
+    void pop() {
+        if (s.empty()) return;
+        if (s.top() == minS.top())
+            minS.pop();
+        s.pop();
+    }
+
+    int top() {
+        if (s.empty()) return -1;
+        return s.top();
+    }
+
+    int getMin() {
+        if (minS.empty()) return -1;
+        return minS.top();
+    }
+
+    bool empty() {
+        return s.empty();
+    }
+};
+// 2️⃣ Asteroid Collision
+
+vector<int> asteroidCollision(vector<int>& asteroids) {
+    stack<int> st;
+    for (int a : asteroids) {
+        bool destroyed = false;
+        while (!st.empty() && a < 0 && st.top() > 0) {
+            if (abs(a) > st.top()) {
+                st.pop(); // top explodes
+                continue;
+            } else if (abs(a) == st.top()) {
+                st.pop(); // both explode
+            }
+            destroyed = true;
+            break;
+        }
+        if (!destroyed)
+            st.push(a);
+    }
+
+    vector<int> res(st.size());
+    for (int i = st.size() - 1; i >= 0; i--) {
+        res[i] = st.top();
+        st.pop();
+    }
+    return res;
+}
+
+// 3️⃣ Stock Span Problem
+/
+vector<int> stockSpan(vector<int>& prices) {
+    int n = prices.size();
+    vector<int> span(n);
+    stack<pair<int, int>> st; // {price, index}
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && st.top().first <= prices[i])
+            st.pop();
+        span[i] = st.empty() ? (i + 1) : (i - st.top().second);
+        st.push({prices[i], i});
+    }
+    return span;
+}
+
+int main() {
+    // 🔸 1️⃣ Min Stack
+    cout << "=== Min Stack ===\n";
+    MinStack ms;
+    ms.push(5);
+    ms.push(2);
+    ms.push(8);
+    ms.push(1);
+    cout << "Current Min: " << ms.getMin() << endl;
+    ms.pop();
+    cout << "After Pop, Min: " << ms.getMin() << "\n\n";
+
+    // 🔸 2️⃣ Asteroid Collision
+    cout << "=== Asteroid Collision ===\n";
+    vector<int> ast = {5, 10, -5};
+    vector<int> res = asteroidCollision(ast);
+    cout << "Result: ";
+    for (int x : res) cout << x << " ";
+    cout << "\n\n";
+
+    // 🔸 3️⃣ Stock Span Problem
+    cout << "=== Stock Span Problem ===\n";
+    vector<int> prices = {100, 80, 60, 70, 60, 75, 85};
+    vector<int> span = stockSpan(prices);
+    cout << "Prices: ";
+    for (int p : prices) cout << p << " ";
+    cout << "\nSpan:   ";
+    for (int s : span) cout << s << " ";
+    cout << endl;
+
+    return 0;
+}
