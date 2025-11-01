@@ -1,0 +1,177 @@
+#include <bits/stdc++.h>
+using namespace std;
+// 1️⃣ Queue Implementation using Array
+class Queue {
+    int *arr;
+    int front, rear, capacity;
+public:
+    Queue(int size) {
+        arr = new int[size];
+        capacity = size;
+        front = rear = -1;
+    }
+
+    void enqueue(int x) {
+        if (rear == capacity - 1) {
+            cout << "Queue Overflow\n";
+            return;
+        }
+        if (front == -1) front = 0;
+        arr[++rear] = x;
+    }
+
+    void dequeue() {
+        if (front == -1 || front > rear) {
+            cout << "Queue Underflow\n";
+            return;
+        }
+        front++;
+    }
+
+    int peek() {
+        if (front == -1 || front > rear) {
+            cout << "Queue is Empty\n";
+            return -1;
+        }
+        return arr[front];
+    }
+
+    bool isEmpty() {
+        return (front == -1 || front > rear);
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is Empty\n";
+            return;
+        }
+        cout << "Queue: ";
+        for (int i = front; i <= rear; i++)
+            cout << arr[i] << " ";
+        cout << endl;
+    }
+};
+// 2️⃣ Circular Queue Implementation
+
+class CircularQueue {
+    int *arr;
+    int front, rear, size, count;
+public:
+    CircularQueue(int n) {
+        size = n;
+        arr = new int[n];
+        front = rear = -1;
+        count = 0;
+    }
+
+    void enqueue(int val) {
+        if (count == size) {
+            cout << "Circular Queue Overflow\n";
+            return;
+        }
+        if (front == -1) front = 0;
+        rear = (rear + 1) % size;
+        arr[rear] = val;
+        count++;
+    }
+
+    void dequeue() {
+        if (count == 0) {
+            cout << "Circular Queue Underflow\n";
+            return;
+        }
+        front = (front + 1) % size;
+        count--;
+        if (count == 0) front = rear = -1;
+    }
+
+    void display() {
+        if (count == 0) {
+            cout << "Circular Queue is Empty\n";
+            return;
+        }
+        cout << "Circular Queue: ";
+        int i = front;
+        for (int c = 0; c < count; c++) {
+            cout << arr[i] << " ";
+            i = (i + 1) % size;
+        }
+        cout << endl;
+    }
+};
+// 3️⃣ Queue using Two Stacks
+class QueueUsingStacks {
+    stack<int> s1, s2;
+public:
+    void enqueue(int x) {
+        s1.push(x);
+    }
+
+    void dequeue() {
+        if (s1.empty() && s2.empty()) {
+            cout << "Queue is Empty\n";
+            return;
+        }
+
+        if (s2.empty()) {
+            while (!s1.empty()) {
+                s2.push(s1.top());
+                s1.pop();
+            }
+        }
+        s2.pop();
+    }
+
+    int front() {
+        if (s1.empty() && s2.empty()) {
+            cout << "Queue is Empty\n";
+            return -1;
+        }
+        if (s2.empty()) {
+            while (!s1.empty()) {
+                s2.push(s1.top());
+                s1.pop();
+            }
+        }
+        return s2.top();
+    }
+
+    bool isEmpty() {
+        return (s1.empty() && s2.empty());
+    }
+};
+int main() {
+    cout << "=== Queue using Array ===\n";
+    Queue q(5);
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.display();
+    q.dequeue();
+    q.display();
+    cout << "Front: " << q.peek() << "\n\n";
+
+    cout << "=== Circular Queue ===\n";
+    CircularQueue cq(5);
+    cq.enqueue(1);
+    cq.enqueue(2);
+    cq.enqueue(3);
+    cq.enqueue(4);
+    cq.display();
+    cq.dequeue();
+    cq.enqueue(5);
+    cq.enqueue(6);
+    cq.display();
+    cout << "\n";
+
+    cout << "=== Queue using Two Stacks ===\n";
+    QueueUsingStacks qs;
+    qs.enqueue(100);
+    qs.enqueue(200);
+    qs.enqueue(300);
+    cout << "Front: " << qs.front() << endl;
+    qs.dequeue();
+    cout << "Front after one dequeue: " << qs.front() << endl;
+
+    return 0;
+}
