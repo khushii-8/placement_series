@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Lower Bound 
+
+int lowerBound(vector<int>& nums, int target) {
+    int low = 0, high = nums.size();
+    while (low < high) {
+        int mid = low + (high - low) / 2;
+        if (nums[mid] < target)
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    return low;
+}
+
+// 2️⃣ Upper Bound – first index where value > target
+int upperBound(vector<int>& nums, int target) {
+    int low = 0, high = nums.size();
+    while (low < high) {
+        int mid = low + (high - low) / 2;
+        if (nums[mid] <= target)
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    return low;
+}
+
+// 3️⃣ Koko Eating Bananas
+bool canEat(vector<int>& piles, int h, int k) {
+    long long hours = 0;
+    for (int pile : piles)
+        hours += (pile + k - 1) / k; // ceil(pile/k)
+    return hours <= h;
+}
+
+int minEatingSpeed(vector<int>& piles, int h) {
+    int low = 1, high = *max_element(piles.begin(), piles.end());
+    int ans = high;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (canEat(piles, h, mid)) {
+            ans = mid;
+            high = mid - 1;
+        } else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+// 4️⃣ First Bad Version (simulate API)
+bool isBadVersion(int version) {
+    return version >= 4; // example: version 4 and above are bad
+}
+
+int firstBadVersion(int n) {
+    int low = 1, high = n, ans = n;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (isBadVersion(mid)) {
+            ans = mid;
+            high = mid - 1;
+        } else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+int main() {
+    // 1️⃣ Lower Bound
+    vector<int> nums = {1, 2, 4, 4, 5, 7};
+    int target = 4;
+    cout << "Lower Bound of " << target << " : " << lowerBound(nums, target) << endl;
+
+    // 2️⃣ Upper Bound
+    cout << "Upper Bound of " << target << " : " << upperBound(nums, target) << endl;
+
+    // 3️⃣ Koko Eating Bananas
+    vector<int> piles = {3, 6, 7, 11};
+    int h = 8;
+    cout << "Minimum eating speed (Koko): " << minEatingSpeed(piles, h) << endl;
+
+    // 4️⃣ First Bad Version
+    cout << "First Bad Version: " << firstBadVersion(7) << endl;
+
+    return 0;
+}
