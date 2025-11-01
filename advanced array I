@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Two Sum
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> mp; // value → index
+    for (int i = 0; i < nums.size(); i++) {
+        int complement = target - nums[i];
+        if (mp.find(complement) != mp.end())
+            return {mp[complement], i};
+        mp[nums[i]] = i;
+    }
+    return {-1, -1}; // not found
+}
+
+// 2️⃣ Best Time to Buy and Sell Stock
+int maxProfit(vector<int>& prices) {
+    int minPrice = INT_MAX, profit = 0;
+    for (int p : prices) {
+        minPrice = min(minPrice, p);
+        profit = max(profit, p - minPrice);
+    }
+    return profit;
+}
+
+// 3️⃣ Sort 0, 1, and 2 (Dutch National Flag Algorithm)
+void sortColors(vector<int>& nums) {
+    int low = 0, mid = 0, high = nums.size() - 1;
+    while (mid <= high) {
+        if (nums[mid] == 0)
+            swap(nums[low++], nums[mid++]);
+        else if (nums[mid] == 1)
+            mid++;
+        else
+            swap(nums[mid], nums[high--]);
+    }
+}
+
+int main() {
+    // 1️⃣ Two Sum
+    vector<int> nums = {2, 7, 11, 15};
+    int target = 9;
+    auto res = twoSum(nums, target);
+    cout << "Two Sum indices: " << res[0] << ", " << res[1] << endl;
+
+    // 2️⃣ Best Time to Buy and Sell Stock
+    vector<int> prices = {7, 1, 5, 3, 6, 4};
+    cout << "Max Profit: " << maxProfit(prices) << endl;
+
+    // 3️⃣ Sort 0, 1, and 2
+    vector<int> colors = {2, 0, 2, 1, 1, 0};
+    sortColors(colors);
+    cout << "Sorted colors: ";
+    for (int x : colors) cout << x << " ";
+    cout << endl;
+
+    return 0;
+}
