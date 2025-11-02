@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Intersection of Two Arrays
+vector<int> intersection(vector<int>& a, vector<int>& b) {
+    unordered_set<int> s(a.begin(), a.end());
+    vector<int> res;
+    for(int x : b)
+        if(s.count(x)) res.push_back(x), s.erase(x);
+    return res;
+}
+
+// 🔹 Set Matrix Zeros
+void setZeroes(vector<vector<int>>& mat) {
+    int n = mat.size(), m = mat[0].size();
+    vector<int> row(n, 1), col(m, 1);
+    for(int i=0;i<n;i++)
+        for(int j=0;j<m;j++)
+            if(mat[i][j]==0) row[i]=col[j]=0;
+    for(int i=0;i<n;i++)
+        for(int j=0;j<m;j++)
+            if(!row[i] || !col[j]) mat[i][j]=0;
+}
+
+// 🔹 Valid Anagram
+bool isAnagram(string s, string t) {
+    if(s.size()!=t.size()) return false;
+    vector<int> freq(26,0);
+    for(char c:s) freq[c-'a']++;
+    for(char c:t) freq[c-'a']--;
+    for(int x:freq) if(x!=0) return false;
+    return true;
+}
+
+int main() {
+    // Intersection
+    vector<int> a = {1,2,2,3}, b = {2,3,4};
+    auto res = intersection(a,b);
+    cout << "Intersection: ";
+    for(int x:res) cout << x << " ";
+    cout << endl;
+
+    // Set Matrix Zeros
+    vector<vector<int>> mat = {{1,1,1},{1,0,1},{1,1,1}};
+    setZeroes(mat);
+    cout << "Matrix after setting zeros:\n";
+    for(auto &r:mat){ for(int x:r) cout<<x<<" "; cout<<endl; }
+
+    // Valid Anagram
+    cout << "Is Anagram (listen,silent): " 
+         << (isAnagram("listen","silent") ? "Yes" : "No") << endl;
+}
