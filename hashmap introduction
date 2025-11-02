@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class HashMap {
+    unordered_map<string, int> mp;  // using STL unordered_map as base
+
+public:
+    // 🔹 Put key-value pair
+    void put(string key, int value) {
+        mp[key] = value;
+    }
+
+    // 🔹 Get value by key
+    int get(string key) {
+        return mp.count(key) ? mp[key] : -1;  // -1 means key not found
+    }
+
+    // 🔹 Check if key exists
+    bool containsKey(string key) {
+        return mp.find(key) != mp.end();
+    }
+
+    // 🔹 Print all keys (KeySet)
+    void keySet() {
+        for(auto &p : mp) cout << p.first << " ";
+        cout << endl;
+    }
+};
+
+int main() {
+    HashMap hm;
+    hm.put("Apple", 50);
+    hm.put("Banana", 30);
+    hm.put("Mango", 80);
+
+    cout << "Apple Price: " << hm.get("Apple") << endl;
+    cout << "Contains 'Banana': " << (hm.containsKey("Banana") ? "Yes" : "No") << endl;
+    cout << "Contains 'Orange': " << (hm.containsKey("Orange") ? "Yes" : "No") << endl;
+
+    cout << "All Keys: "; 
+    hm.keySet();
+}
