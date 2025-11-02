@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Largest Subarray with 0 Sum
+int largestSubarrayZeroSum(vector<int>& arr) {
+    unordered_map<int,int> mp;  // prefixSum -> index
+    int sum = 0, maxLen = 0;
+    for(int i=0;i<arr.size();i++) {
+        sum += arr[i];
+        if(sum == 0) maxLen = i + 1;
+        else if(mp.count(sum)) maxLen = max(maxLen, i - mp[sum]);
+        else mp[sum] = i;
+    }
+    return maxLen;
+}
+
+// 🔹 Count of Zero Sum Subarrays
+int countZeroSumSubarrays(vector<int>& arr) {
+    unordered_map<int,int> freq;
+    int sum = 0, count = 0;
+    for(int x : arr) {
+        sum += x;
+        if(sum == 0) count++;
+        if(freq.count(sum)) count += freq[sum];
+        freq[sum]++;
+    }
+    return count;
+}
+
+// 🔹 Length of Largest Subarray with Contiguous Elements
+int largestContiguousSubarray(vector<int>& arr) {
+    int n = arr.size(), maxLen = 0;
+    for(int i=0;i<n;i++) {
+        int mn = arr[i], mx = arr[i];
+        unordered_set<int> s;
+        s.insert(arr[i]);
+        for(int j=i+1;j<n;j++) {
+            if(s.count(arr[j])) break;
+            s.insert(arr[j]);
+            mn = min(mn, arr[j]);
+            mx = max(mx, arr[j]);
+            if(mx - mn == j - i) maxLen = max(maxLen, j - i + 1);
+        }
+    }
+    return maxLen;
+}
+
+int main() {
+    vector<int> arr = {15, -2, 2, -8, 1, 7, 10, 23};
+    cout << "Largest Subarray with 0 Sum: " << largestSubarrayZeroSum(arr) << endl;
+    cout << "Count of Zero Sum Subarrays: " << countZeroSumSubarrays(arr) << endl;
+
+    vector<int> arr2 = {10, 12, 11};
+    cout << "Largest Contiguous Subarray Length: " << largestContiguousSubarray(arr2) << endl;
+}
