@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Two Sum (return indices)
+void twoSum(vector<int>& nums, int target) {
+    unordered_map<int,int> mp;  // num -> index
+    for(int i=0;i<nums.size();i++) {
+        int rem = target - nums[i];
+        if(mp.count(rem)) {
+            cout << "Indices: " << mp[rem] << " " << i << endl;
+            return;
+        }
+        mp[nums[i]] = i;
+    }
+    cout << "No pair found\n";
+}
+
+// 🔹 Highest Frequency Character
+void highestFreqChar(string s) {
+    unordered_map<char,int> freq;
+    for(char c : s) freq[c]++;
+    char ans = ' '; int mx = 0;
+    for(auto &p : freq)
+        if(p.second > mx) mx = p.second, ans = p.first;
+    cout << "Highest Frequency Char: " << ans << " (" << mx << " times)" << endl;
+}
+
+// 🔹 Missing Number (array 0..n)
+int missingNumber(vector<int>& nums) {
+    int n = nums.size();
+    int total = n*(n+1)/2;
+    int sum = accumulate(nums.begin(), nums.end(), 0);
+    return total - sum;
+}
+
+int main() {
+    vector<int> nums = {2,7,11,15};
+    twoSum(nums, 9);
+
+    string s = "aabbbbccdde";
+    highestFreqChar(s);
+
+    vector<int> arr = {0,1,3,4};
+    cout << "Missing Number: " << missingNumber(arr) << endl;
+}
