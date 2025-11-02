@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Longest Consecutive Sequence
+int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> s(nums.begin(), nums.end());
+    int longest = 0;
+    for(int num : s) {
+        if(!s.count(num-1)) { // start of sequence
+            int curr = num, len = 1;
+            while(s.count(curr+1)) curr++, len++;
+            longest = max(longest, len);
+        }
+    }
+    return longest;
+}
+
+// 🔹 Longest Substring Without Repeating Characters
+int lengthOfLongestSubstring(string s) {
+    vector<int> seen(256, -1);
+    int start = 0, maxLen = 0;
+    for(int i=0;i<s.size();i++) {
+        if(seen[s[i]] >= start)
+            start = seen[s[i]] + 1;
+        seen[s[i]] = i;
+        maxLen = max(maxLen, i - start + 1);
+    }
+    return maxLen;
+}
+
+// 🔹 Bulls and Cows
+string getHint(string secret, string guess) {
+    int bulls = 0, cows = 0;
+    vector<int> s(10,0), g(10,0);
+    for(int i=0;i<secret.size();i++){
+        if(secret[i]==guess[i]) bulls++;
+        else s[secret[i]-'0']++, g[guess[i]-'0']++;
+    }
+    for(int i=0;i<10;i++) cows += min(s[i], g[i]);
+    return to_string(bulls)+"A"+to_string(cows)+"B";
+}
+
+int main() {
+    // Longest Consecutive Sequence
+    vector<int> nums = {100,4,200,1,3,2};
+    cout << "Longest Consecutive Sequence: " << longestConsecutive(nums) << endl;
+
+    // Longest Substring Without Repeating Characters
+    string s = "abcabcbb";
+    cout << "Longest Substring Without Repeat: " << lengthOfLongestSubstring(s) << endl;
+
+    // Bulls and Cows
+    cout << "Bulls and Cows (1807,7810): " << getHint("1807","7810") << endl;
+}
