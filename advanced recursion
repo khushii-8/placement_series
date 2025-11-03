@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Print all subsets
+void printSubsets(string s, string curr = "", int i = 0) {
+    if (i == s.size()) {
+        cout << curr << " ";
+        return;
+    }
+    printSubsets(s, curr, i + 1);          // exclude
+    printSubsets(s, curr + s[i], i + 1);   // include
+}
+
+// 🔹 Permutations of a string
+void permute(string s, int l = 0) {
+    if (l == s.size() - 1) {
+        cout << s << " ";
+        return;
+    }
+    for (int i = l; i < s.size(); i++) {
+        swap(s[l], s[i]);
+        permute(s, l + 1);
+        swap(s[l], s[i]); // backtrack
+    }
+}
+
+// 🔹 Unique subsets
+void uniqueSubsets(vector<int> &nums, int i, vector<int> &curr, vector<vector<int>> &res) {
+    res.push_back(curr);
+    for (int j = i; j < nums.size(); j++) {
+        if (j > i && nums[j] == nums[j - 1]) continue; // skip duplicates
+        curr.push_back(nums[j]);
+        uniqueSubsets(nums, j + 1, curr, res);
+        curr.pop_back();
+    }
+}
+
+int main() {
+    cout << "All subsets of 'abc': ";
+    printSubsets("abc");
+    cout << "\n\nPermutations of 'abc': ";
+    permute("abc");
+
+    cout << "\n\nUnique subsets of [1,2,2]: ";
+    vector<int> nums = {1, 2, 2}, curr;
+    vector<vector<int>> res;
+    sort(nums.begin(), nums.end());
+    uniqueSubsets(nums, 0, curr, res);
+    for (auto &v : res) {
+        cout << "{";
+        for (int x : v) cout << x;
+        cout << "} ";
+    }
+    return 0;
+}
