@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int MOD = 1e9 + 7;
+
+// 🔹 Sieve of Eratosthenes – Generate primes up to n
+vector<int> sieve(int n) {
+    vector<bool> prime(n + 1, true);
+    prime[0] = prime[1] = false;
+    for (int i = 2; i * i <= n; i++)
+        if (prime[i])
+            for (int j = i * i; j <= n; j += i)
+                prime[j] = false;
+
+    vector<int> primes;
+    for (int i = 2; i <= n; i++)
+        if (prime[i]) primes.push_back(i);
+    return primes;
+}
+
+// 🔹 Modular Arithmetic Example
+int modAdd(int a, int b, int m) { return ((a % m) + (b % m)) % m; }
+int modMul(int a, int b, int m) { return ((1LL * (a % m) * (b % m)) % m); }
+
+// 🔹 Modular Exponentiation (a^b % m)
+long long modExp(long long a, long long b, long long m) {
+    long long res = 1;
+    a %= m;
+    while (b > 0) {
+        if (b & 1) res = (res * a) % m;
+        a = (a * a) % m;
+        b >>= 1;
+    }
+    return res;
+}
+
+// 🔹 Chinese Remainder Theorem
+int CRT(vector<int> num, vector<int> rem) {
+    int prod = 1;
+    for (int n : num) prod *= n;
+
+    int result = 0;
+    for (int i = 0; i < num.size(); i++) {
+        int pp = prod / num[i];
+        int inv = modExp(pp, num[i] - 2, num[i]); // modular inverse
+        result = (result + rem[i] * inv % prod * pp) % prod;
+    }
+    return (result + prod) % prod;
+}
+
+int main() {
+    // ✅ Sieve
+    auto primes = sieve(30);
+    cout << "Primes up to 30: ";
+    for (int p : primes) cout << p << " ";
+    cout << endl;
+
+    // ✅ Modular Arithmetic
+    cout << "Mod Add (5+7)%MOD: " << modAdd(5, 7, MOD) << endl;
+    cout << "Mod Mul (5*7)%MOD: " << modMul(5, 7, MOD) << endl;
+
+    // ✅ Modular Exponentiation
+    cout << "2^10 % MOD = " << modExp(2, 10, MOD) << endl;
+
+    // ✅ Chinese Remainder Theorem
+    vector<int> num = {3, 4, 5};
+    vector<int> rem = {2, 3, 1};
+    cout << "CRT result = " << CRT(num, rem) << endl;
+
+    return 0;
+}
