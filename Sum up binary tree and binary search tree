@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Tree Node Definition
+struct Node {
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(NULL), right(NULL) {}
+};
+
+// 🔹 Sum of Leaf Nodes
+int sumOfLeaves(Node* root) {
+    if(!root) return 0;
+    if(!root->left && !root->right) return root->data;
+    return sumOfLeaves(root->left) + sumOfLeaves(root->right);
+}
+
+// 🔹 Top View of Binary Tree
+vector<int> topView(Node* root) {
+    vector<int> ans;
+    if(!root) return ans;
+    map<int,int> mp;
+    queue<pair<Node*, int>> q;
+    q.push({root, 0});
+
+    while(!q.empty()) {
+        auto [node, hd] = q.front(); q.pop();
+        if(mp.find(hd) == mp.end()) mp[hd] = node->data;
+        if(node->left) q.push({node->left, hd - 1});
+        if(node->right) q.push({node->right, hd + 1});
+    }
+    for(auto x : mp) ans.push_back(x.second);
+    return ans;
+}
+
+// 🔹 Bottom View of Binary Tree
+vector<int> bottomView(Node* root) {
+    vector<int> ans;
+    if(!root) return ans;
+    map<int,int> mp;
+    queue<pair<Node*, int>> q;
+    q.push({root, 0});
+
+    while(!q.empty()) {
+        auto [node, hd] = q.front(); q.pop();
+        mp[hd] = node->data;
+        if(node->left) q.push({node->left, hd - 1});
+        if(node->right) q.push({node->right, hd + 1});
+    }
+    for(auto x : mp) ans.push_back(x.second);
+    return ans;
+}
+
+// 🔹 Main Function
+int main() {
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+    root->right->left = new Node(6);
+    root->right->right = new Node(7);
+
+    cout << "Sum of Leaf Nodes: " << sumOfLeaves(root) << endl;
+
+    auto top = topView(root);
+    cout << "Top View: ";
+    for(int x : top) cout << x << " ";
+    cout << endl;
+
+    auto bottom = bottomView(root);
+    cout << "Bottom View: ";
+    for(int x : bottom) cout << x << " ";
+    cout << endl;
+}
