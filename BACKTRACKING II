@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 1️⃣ Combination
+void comb(int n,int k,int start,vector<int>&cur){
+    if(cur.size()==k){for(int x:cur)cout<<x;cout<<" ";return;}
+    for(int i=start;i<=n;i++){cur.push_back(i);comb(n,k,i+1,cur);cur.pop_back();}
+}
+
+// 🔹 2️⃣ Combination Sum
+void combSum(vector<int>&a,int t,int i,vector<int>&cur){
+    if(t==0){for(int x:cur)cout<<x;cout<<" ";return;}
+    if(i==a.size()||t<0)return;
+    cur.push_back(a[i]); combSum(a,t-a[i],i,cur); cur.pop_back();
+    combSum(a,t,i+1,cur);
+}
+
+// 🔹 3️⃣ Combination Sum II
+void combSum2(vector<int>&a,int t,int i,vector<int>&cur){
+    if(t==0){for(int x:cur)cout<<x;cout<<" ";return;}
+    for(int j=i;j<a.size();j++){
+        if(j>i&&a[j]==a[j-1])continue;
+        if(a[j]>t)break;
+        cur.push_back(a[j]);
+        combSum2(a,t-a[j],j+1,cur);
+        cur.pop_back();
+    }
+}
+
+int main(){
+    vector<int> cur;
+
+    cout<<"Combinations (n=4,k=2): ";
+    comb(4,2,1,cur);
+
+    cout<<"\n\nCombination Sum (arr=[2,3,6,7], target=7): ";
+    vector<int> a={2,3,6,7};
+    combSum(a,7,0,cur);
+
+    cout<<"\n\nCombination Sum II (arr=[10,1,2,7,6,1,5], target=8): ";
+    vector<int> b={10,1,2,7,6,1,5};
+    sort(b.begin(),b.end());
+    combSum2(b,8,0,cur);
+}
