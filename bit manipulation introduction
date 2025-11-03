@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int a = 5, b = 3; // (0101, 0011)
+
+    // 🔹 Basic Bitwise Operations
+    cout << "AND: " << (a & b) << endl;
+    cout << "OR : " << (a | b) << endl;
+    cout << "XOR: " << (a ^ b) << endl;
+
+    int n = 29; // 11101
+    cout << "Count of Set Bits: " << __builtin_popcount(n) << endl;
+    cout << "Count of Unset Bits (in 8-bit): " << 8 - __builtin_popcount(n) << endl;
+
+    // 🔹 Toggle kth Bit
+    int k = 2;
+    n ^= (1 << k);
+    cout << "After toggling " << k << "th bit: " << n << endl;
+
+    // 🔹 Check if nth Bit is Set or Unset
+    int bit = 3;
+    cout << bit << "rd bit is " << (((n >> bit) & 1) ? "Set" : "Unset") << endl;
+
+    // 🔹 Check Power of Two
+    int x = 16;
+    cout << x << " is Power of Two: " << ((x && !(x & (x - 1))) ? "Yes" : "No") << endl;
+
+    // 🔹 Check Power of Four
+    cout << x << " is Power of Four: " 
+         << ((x && !(x & (x - 1)) && (x % 3 == 1)) ? "Yes" : "No") << endl;
+
+    return 0;
+}
