@@ -1,0 +1,97 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Counting Bits (0 to n)
+vector<int> countBits(int n) {
+    vector<int> ans(n + 1);
+    for(int i = 1; i <= n; i++)
+        ans[i] = ans[i >> 1] + (i & 1);
+    return ans;
+}
+
+// 🔹 Single Number I (appears once)
+int singleNumber1(vector<int>& nums) {
+    int x = 0;
+    for(int n : nums) x ^= n;
+    return x;
+}
+
+// 🔹 Single Number II (appears once, others thrice)
+int singleNumber2(vector<int>& nums) {
+    int ones = 0, twos = 0;
+    for(int n : nums) {
+        ones = (ones ^ n) & ~twos;
+        twos = (twos ^ n) & ~ones;
+    }
+    return ones;
+}
+
+// 🔹 Subsets using Bits (Power Set)
+vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> res;
+    int n = nums.size();
+    for(int mask = 0; mask < (1 << n); mask++) {
+        vector<int> subset;
+        for(int i = 0; i < n; i++)
+            if(mask & (1 << i)) subset.push_back(nums[i]);
+        res.push_back(subset);
+    }
+    return res;
+}
+
+// 🔹 Find Missing Number (0 to n)
+int missingNumber(vector<int>& nums) {
+    int x = 0;
+    for(int i = 0; i < nums.size(); i++) x ^= i ^ nums[i];
+    return x ^ nums.size();
+}
+
+// 🔹 Find Duplicate Number
+int findDuplicate(vector<int>& nums) {
+    int slow = nums[0], fast = nums[0];
+    do {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while(slow != fast);
+    slow = nums[0];
+    while(slow != fast) {
+        slow = nums[slow];
+        fast = nums[fast];
+    }
+    return slow;
+}
+
+int main() {
+    // ✅ Counting Bits
+    auto bits = countBits(5);
+    cout << "Count Bits: ";
+    for(int b : bits) cout << b << " ";
+    cout << endl;
+
+    // ✅ Single Number I
+    vector<int> a = {2,2,1};
+    cout << "Single Number I: " << singleNumber1(a) << endl;
+
+    // ✅ Single Number II
+    vector<int> b = {2,2,3,2};
+    cout << "Single Number II: " << singleNumber2(b) << endl;
+
+    // ✅ Subsets
+    vector<int> c = {1,2,3};
+    cout << "Subsets:\n";
+    for(auto &s : subsets(c)) {
+        cout << "{ ";
+        for(int x : s) cout << x << " ";
+        cout << "}\n";
+    }
+
+    // ✅ Missing Number
+    vector<int> d = {3,0,1};
+    cout << "Missing Number: " << missingNumber(d) << endl;
+
+    // ✅ Duplicate Number
+    vector<int> e = {1,3,4,2,2};
+    cout << "Duplicate Number: " << findDuplicate(e) << endl;
+
+    return 0;
+}
