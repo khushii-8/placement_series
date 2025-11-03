@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 In-place Heap Sort
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2*i + 1;
+    int right = 2*i + 2;
+
+    if(left < n && arr[left] > arr[largest]) largest = left;
+    if(right < n && arr[right] > arr[largest]) largest = right;
+
+    if(largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+
+void heapSort(vector<int>& arr) {
+    int n = arr.size();
+    for(int i = n/2 - 1; i >= 0; i--) heapify(arr, n, i);
+    for(int i = n-1; i > 0; i--) {
+        swap(arr[0], arr[i]);
+        heapify(arr, i, 0);
+    }
+}
+
+// 🔹 Kth Largest Element
+int kthLargest(vector<int> arr, int k) {
+    priority_queue<int, vector<int>, greater<int>> pq;
+    for(int x : arr) {
+        pq.push(x);
+        if(pq.size() > k) pq.pop();
+    }
+    return pq.top();
+}
+
+// 🔹 Kth Smallest Element
+int kthSmallest(vector<int> arr, int k) {
+    priority_queue<int> pq;
+    for(int x : arr) {
+        pq.push(x);
+        if(pq.size() > k) pq.pop();
+    }
+    return pq.top();
+}
+
+int main() {
+    vector<int> arr = {7, 10, 4, 3, 20, 15};
+
+    // ✅ Heap Sort
+    heapSort(arr);
+    cout << "Sorted Array: ";
+    for(int x : arr) cout << x << " ";
+    cout << endl;
+
+    // ✅ Kth Largest & Smallest
+    cout << "3rd Largest: " << kthLargest(arr, 3) << endl;
+    cout << "3rd Smallest: " << kthSmallest(arr, 3) << endl;
+
+    return 0;
+}
