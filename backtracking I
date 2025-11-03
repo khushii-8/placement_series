@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 Rat in a Maze – One Path
+bool solveMaze(vector<vector<int>> &m, int x, int y, vector<vector<int>> &sol) {
+    int n = m.size();
+    if (x == n - 1 && y == n - 1 && m[x][y] == 1) {
+        sol[x][y] = 1;
+        return true;
+    }
+    if (x >= 0 && y >= 0 && x < n && y < n && m[x][y] == 1 && sol[x][y] == 0) {
+        sol[x][y] = 1;
+        if (solveMaze(m, x + 1, y, sol) || solveMaze(m, x, y + 1, sol))
+            return true;
+        sol[x][y] = 0;
+    }
+    return false;
+}
+
+// 🔹 Rat in a Maze – All Paths
+void allPaths(vector<vector<int>> &m, int x, int y, string path, vector<string> &res) {
+    int n = m.size();
+    if (x == n - 1 && y == n - 1) {
+        res.push_back(path);
+        return;
+    }
+    m[x][y] = 0;
+    if (x + 1 < n && m[x + 1][y]) allPaths(m, x + 1, y, path + 'D', res);
+    if (y + 1 < n && m[x][y + 1]) allPaths(m, x, y + 1, path + 'R', res);
+    if (x - 1 >= 0 && m[x - 1][y]) allPaths(m, x - 1, y, path + 'U', res);
+    if (y - 1 >= 0 && m[x][y - 1]) allPaths(m, x, y - 1, path + 'L', res);
+    m[x][y] = 1;
+}
+
+// 🔹 N-Queens Problem
+bool isSafe(vector<string> &board, int row, int col, int n) {
+    for (int i = 0; i < row; i++)
+        if (board[i][col] == 'Q') return false;
+    for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j] == 'Q') return false;
+    for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++)
+        if (board[i][j] == 'Q') return false;
+    return true;
+}
+
+void solveNQueens(int row, vector<string> &board, int n, vector<vector<string>> &res) {
+    if (row == n) {
+        res.push_back(board);
+        return;
+    }
+    for (int col = 0; col < n; col++) {
+        if (isSafe(board, row, col, n)) {
+            board[row][col] = 'Q';
+            solveNQueens(row + 1, board, n, res);
+            board[row][col] = '.';
+        }
+    }
+}
+
+int main() {
+    // 🐭 Rat in a Maze (One Path)
+    vector<vector<int>> maze = {{1,0,0,0},{1,1,0,1},{0,1,0,0},{1,1,1,1}}, sol(4, vector<int>(4, 0));
+    if (solveMaze(maze, 0, 0, sol)) {
+        cout << "One Path:\n";
+        for (auto &r : sol) { for (int c : r) cout << c << " "; cout << "\n"; }
+    }
+
+    // 🐾 All Paths
+    vector<string> paths;
+    allPaths(maze, 0, 0, "", paths);
+    cout << "\nAll Paths:\n";
+    for (auto &p : paths) cout << p << " ";
+
+    // 👑 N-Queens
+    int n = 4;
+    vector<string> board(n, string(n, '.'));
+    vector<vector<string>> res;
+    solveNQueens(0, board, n, res);
+    cout << "\n\nN-Queens Solutions:\n";
+    for (auto &b : res) {
+        for (auto &r : b) cout << r << "\n";
+        cout << "---\n";
+    }
+}
