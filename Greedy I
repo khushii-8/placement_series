@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 1️⃣ Assign Cookies
+int findContentChildren(vector<int>&g, vector<int>&s){
+    sort(g.begin(),g.end()); sort(s.begin(),s.end());
+    int i=0,j=0;
+    while(i<g.size() && j<s.size()){
+        if(s[j]>=g[i]) i++;
+        j++;
+    }
+    return i;
+}
+
+// 🔹 2️⃣ Array Partition
+int arrayPairSum(vector<int>&a){
+    sort(a.begin(),a.end());
+    int sum=0;
+    for(int i=0;i<a.size();i+=2) sum+=a[i];
+    return sum;
+}
+
+// 🔹 3️⃣ Can Place Flowers
+bool canPlaceFlowers(vector<int>&f,int n){
+    for(int i=0;i<f.size() && n>0;i++){
+        if(f[i]==0 && (i==0||f[i-1]==0) && (i==f.size()-1||f[i+1]==0)){
+            f[i]=1; n--;
+        }
+    }
+    return n==0;
+}
+
+// 🔹 4️⃣ Lemonade Change
+bool lemonadeChange(vector<int>&bills){
+    int five=0,ten=0;
+    for(int b:bills){
+        if(b==5) five++;
+        else if(b==10){if(!five) return false; five--; ten++;}
+        else{
+            if(ten && five){ten--; five--;}
+            else if(five>=3) five-=3;
+            else return false;
+        }
+    }
+    return true;
+}
+
+int main(){
+    vector<int> g={1,2,3}, s={1,1};
+    cout<<"Assign Cookies: "<<findContentChildren(g,s)<<"\n";
+
+    vector<int> arr={1,4,3,2};
+    cout<<"Array Partition Sum: "<<arrayPairSum(arr)<<"\n";
+
+    vector<int> f={1,0,0,0,1};
+    cout<<"Can Place Flowers: "<<(canPlaceFlowers(f,1)?"Yes":"No")<<"\n";
+
+    vector<int> bills={5,5,5,10,20};
+    cout<<"Lemonade Change: "<<(lemonadeChange(bills)?"Possible":"Not Possible")<<"\n";
+}
