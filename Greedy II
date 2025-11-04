@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 🔹 1️⃣ Activity Selection
+int activitySelection(vector<int>&start, vector<int>&end){
+    vector<pair<int,int>> act;
+    for(int i=0;i<start.size();i++) act.push_back({end[i],start[i]});
+    sort(act.begin(),act.end());
+    int count=1, lastEnd=act[0].first;
+    for(int i=1;i<act.size();i++)
+        if(act[i].second>=lastEnd){count++; lastEnd=act[i].first;}
+    return count;
+}
+
+// 🔹 2️⃣ Minimum Platforms
+int minPlatforms(vector<int>&arr, vector<int>&dep){
+    sort(arr.begin(),arr.end());
+    sort(dep.begin(),dep.end());
+    int i=0,j=0,plat=0,maxPlat=0;
+    while(i<arr.size()){
+        if(arr[i]<=dep[j]) plat++,i++;
+        else plat--,j++;
+        maxPlat=max(maxPlat,plat);
+    }
+    return maxPlat;
+}
+
+// 🔹 3️⃣ Coin Change (Greedy)
+int coinChange(vector<int>&coins,int amt){
+    sort(coins.rbegin(),coins.rend());
+    int cnt=0;
+    for(int c:coins){
+        cnt+=amt/c;
+        amt%=c;
+    }
+    return cnt;
+}
+
+int main(){
+    vector<int> s={1,3,2,5}, e={2,4,3,6};
+    cout<<"Activity Selection: "<<activitySelection(s,e)<<"\n";
+
+    vector<int> arr={900,940,950,1100,1500,1800};
+    vector<int> dep={910,1200,1120,1130,1900,2000};
+    cout<<"Min Platforms: "<<minPlatforms(arr,dep)<<"\n";
+
+    vector<int> coins={1,2,5,10,20,50,100,500,2000};
+    cout<<"Coin Change for 93: "<<coinChange(coins,93)<<" coins\n";
+}
