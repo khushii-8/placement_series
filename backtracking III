@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+🔹 1️⃣ Generate Parentheses
+void gen(int n,string s,int open,int close){
+    if(s.size()==2*n){cout<<s<<" ";return;}
+    if(open<n) gen(n,s+'(',open+1,close);
+    if(close<open) gen(n,s+')',open,close+1);
+}
+ 🔹 2️⃣ Subset II (unique subsets)
+void subset2(vector<int>&a,int i,vector<int>&cur){
+    static vector<vector<int>> res;
+    if(i==a.size()){res.push_back(cur);return;}
+    cur.push_back(a[i]); subset2(a,i+1,cur); cur.pop_back();
+    while(i+1<a.size() && a[i]==a[i+1]) i++;
+    subset2(a,i+1,cur);
+    if(i==0){for(auto&s:res){cout<<"{";for(int x:s)cout<<x;cout<<"} ";}}
+}
+ 🔹 3️⃣ Sudoku Solver
+bool safe(vector<vector<char>>&b,int r,int c,char ch){
+    for(int i=0;i<9;i++)
+        if(b[r][i]==ch||b[i][c]==ch||b[3*(r/3)+i/3][3*(c/3)+i%3]==ch) return false;
+    return true;
+}
+bool solve(vector<vector<char>>&b){
+    for(int r=0;r<9;r++)
+        for(int c=0;c<9;c++)
+            if(b[r][c]=='.'){
+                for(char ch='1';ch<='9';ch++)
+                    if(safe(b,r,c,ch)){b[r][c]=ch;if(solve(b))return true;b[r][c]='.';}
+                return false;
+            }
+    return true;
+}
+
+int main(){
+    cout<<"Generate Parentheses (n=3): ";
+    gen(3,"",0,0);
+
+    cout<<"\n\nSubset-II of [1,2,2]: ";
+    vector<int>a={1,2,2},cur; sort(a.begin(),a.end());
+    subset2(a,0,cur);
+
+    cout<<"\n\nSudoku Solver (partial demo):\n";
+    vector<vector<char>>b={
+        {'5','3','.','.','7','.','.','.','.'},
+        {'6','.','.','1','9','5','.','.','.'},
+        {'.','9','8','.','.','.','.','6','.'},
+        {'8','.','.','.','6','.','.','.','3'},
+        {'4','.','.','8','.','3','.','.','1'},
+        {'7','.','.','.','2','.','.','.','6'},
+        {'.','6','.','.','.','.','2','8','.'},
+        {'.','.','.','4','1','9','.','.','5'},
+        {'.','.','.','.','8','.','.','7','9'}};
+    solve(b);
+    for(auto&r:b){for(char c:r)cout<<c<<" ";cout<<"\n";}
+}
