@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// ✅ Has Path
+bool hasPath(vector<vector<int>>& g,int s,int d,vector<int>& vis){
+    if(s==d) return true; vis[s]=1;
+    for(int v:g[s]) if(!vis[v] && hasPath(g,v,d,vis)) return true;
+    return false;
+}
+
+// ✅ Print All Paths
+void allPath(vector<vector<int>>& g,int s,int d,vector<int>& vis,string path){
+    if(s==d){ cout<<path+d<<"\n"; return; }
+    vis[s]=1;
+    for(int v:g[s]) if(!vis[v]) allPath(g,v,d,vis,path+to_string(s)+"->");
+    vis[s]=0;
+}
+
+// ✅ Number of Islands (Grid)
+void dfs(vector<vector<char>>& g,int i,int j){
+    if(i<0||j<0||i>=g.size()||j>=g[0].size()||g[i][j]=='0') return;
+    g[i][j]='0';
+    dfs(g,i+1,j); dfs(g,i-1,j); dfs(g,i,j+1); dfs(g,i,j-1);
+}
+int numIslands(vector<vector<char>>& g){
+    int c=0; for(int i=0;i<g.size();i++)
+        for(int j=0;j<g[0].size();j++)
+            if(g[i][j]=='1'){ c++; dfs(g,i,j); }
+    return c;
+}
+
+int main(){
+    vector<vector<int>> g={{1,2},{0,3},{0,3},{1,2}};
+    vector<int> vis(4,0);
+    cout<<"Has Path: "<<(hasPath(g,0,3,vis)?"Yes":"No")<<"\n";
+    fill(vis.begin(),vis.end(),0);
+    cout<<"All Paths:\n"; allPath(g,0,3,vis,"");
+
+    vector<vector<char>> grid={{'1','1','0'},{'0','1','0'},{'1','0','1'}};
+    cout<<"No. of Islands: "<<numIslands(grid)<<"\n";
+}
