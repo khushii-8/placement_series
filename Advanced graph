@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// ✅ Number of Provinces
+void dfs1(int i,vector<vector<int>>& isC,vector<int>& vis){
+    vis[i]=1;
+    for(int j=0;j<isC.size();j++) if(isC[i][j] && !vis[j]) dfs1(j,isC,vis);
+}
+int findCircleNum(vector<vector<int>>& isC){
+    int n=isC.size(),cnt=0; vector<int> vis(n,0);
+    for(int i=0;i<n;i++) if(!vis[i]){ dfs1(i,isC,vis); cnt++; }
+    return cnt;
+}
+
+// ✅ Flood Fill
+void fill(vector<vector<int>>& img,int i,int j,int nc,int oc){
+    if(i<0||j<0||i>=img.size()||j>=img[0].size()||img[i][j]!=oc) return;
+    img[i][j]=nc;
+    fill(img,i+1,j,nc,oc); fill(img,i-1,j,nc,oc); fill(img,i,j+1,nc,oc); fill(img,i,j-1,nc,oc);
+}
+
+// ✅ Closed Islands
+int dfs2(vector<vector<int>>& g,int i,int j){
+    if(i<0||j<0||i>=g.size()||j>=g[0].size()) return 0;
+    if(g[i][j]==1) return 1;
+    g[i][j]=1;
+    int up=dfs2(g,i-1,j),down=dfs2(g,i+1,j),left=dfs2(g,i,j-1),right=dfs2(g,i,j+1);
+    return up&down&left&right;
+}
+int closedIslands(vector<vector<int>>& g){
+    int c=0; for(int i=0;i<g.size();i++) for(int j=0;j<g[0].size();j++)
+        if(!g[i][j] && dfs2(g,i,j)) c++; return c;
+}
+
+int main(){
+    vector<vector<int>> isC={{1,1,0},{1,1,0},{0,0,1}};
+    cout<<"Provinces: "<<findCircleNum(isC)<<"\n";
+
+    vector<vector<int>> img={{1,1,1},{1,1,0},{1,0,1}};
+    fill(img,1,1,2,1); cout<<"Flood fill done\n";
+
+    vector<vector<int>> grid={{1,1,1,1},{1,0,0,1},{1,1,1,1}};
+    cout<<"Closed Islands: "<<closedIslands(grid)<<"\n";
+}
