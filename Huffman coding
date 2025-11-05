@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct Node{
+    char ch; int f; Node *l,*r;
+    Node(char c,int f):ch(c),f(f),l(0),r(0){}
+};
+struct cmp{bool operator()(Node*a,Node*b){return a->f>b->f;}};
+
+void build(Node* r,string s,unordered_map<char,string>& h){
+    if(!r) return;
+    if(!r->l && !r->r) h[r->ch]=s;
+    build(r->l,s+"0",h); build(r->r,s+"1",h);
+}
+
+int main(){
+    string text="aabcc"; unordered_map<char,int> f;
+    for(char c:text) f[c]++;
+    priority_queue<Node*,vector<Node*>,cmp> pq;
+    for(auto &x:f) pq.push(new Node(x.first,x.second));
+    while(pq.size()>1){
+        Node *l=pq.top(); pq.pop();
+        Node *r=pq.top(); pq.pop();
+        Node* n=new Node('\0',l->f+r->f);
+        n->l=l; n->r=r; pq.push(n);
+    }
+    unordered_map<char,string> h; build(pq.top(),"",h);
+    for(auto &x:h) cout<<x.first<<":"<<x.second<<" ";
+}
