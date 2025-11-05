@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TrieNode{
+    bool end=false; TrieNode* child[26]={nullptr};
+};
+TrieNode* root=new TrieNode();
+
+void insert(string w){
+    TrieNode* t=root;
+    for(char c:w){
+        if(!t->child[c-'a']) t->child[c-'a']=new TrieNode();
+        t=t->child[c-'a'];
+    } t->end=true;
+}
+
+bool search(string w){
+    TrieNode* t=root;
+    for(char c:w){
+        if(!t->child[c-'a']) return 0;
+        t=t->child[c-'a'];
+    } return t->end;
+}
+
+bool wordBreak(string s){
+    if(s.empty()) return 1;
+    for(int i=1;i<=s.size();i++)
+        if(search(s.substr(0,i)) && wordBreak(s.substr(i))) return 1;
+    return 0;
+}
+
+int main(){
+    insert("leet"); insert("code");
+    cout<<"Word Break: "<<wordBreak("leetcode")<<"\n";
+}
