@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Staircase (ways to reach nth step)
+int stairM(int n, vector<int>&dp){
+    if(n<=2) return n;
+    if(dp[n]!=-1) return dp[n];
+    return dp[n]=stairM(n-1,dp)+stairM(n-2,dp);
+}
+int stairT(int n){
+    vector<int>dp(n+1); dp[1]=1; dp[2]=2;
+    for(int i=3;i<=n;i++) dp[i]=dp[i-1]+dp[i-2];
+    return dp[n];
+}
+
+// 2️⃣ Min Cost Climbing Stairs
+int minCostM(int i, vector<int>&c, vector<int>&dp){
+    if(i>=c.size()) return 0;
+    if(dp[i]!=-1) return dp[i];
+    return dp[i]=c[i]+min(minCostM(i+1,c,dp),minCostM(i+2,c,dp));
+}
+int minCostT(vector<int>&c){
+    int n=c.size(); vector<int>dp(n+1);
+    for(int i=n-1;i>=0;i--)
+        dp[i]=c[i]+min(dp[min(n,i+1)],dp[min(n,i+2)]);
+    return min(dp[0],dp[1]);
+}
+
+// 3️⃣ Counting Bits (0→n)
+vector<int> countBits(int n){
+    vector<int>dp(n+1);
+    for(int i=1;i<=n;i++) dp[i]=dp[i>>1]+(i&1);
+    return dp;
+}
+
+// 4️⃣ Perfect Squares (min count to form n)
+int sqM(int n, vector<int>&dp){
+    if(n==0) return 0;
+    if(dp[n]!=-1) return dp[n];
+    int ans=n;
+    for(int i=1;i*i<=n;i++)
+        ans=min(ans,1+sqM(n-i*i,dp));
+    return dp[n]=ans;
+}
+int sqT(int n){
+    vector<int>dp(n+1,1e9); dp[0]=0;
+    for(int i=1;i<=n;i++)
+        for(int j=1;j*j<=i;j++)
+            dp[i]=min(dp[i],1+dp[i-j*j]);
+    return dp[n];
+}
+
+int main(){
+    int n=5; vector<int>dp(n+1,-1);
+    cout<<"Staircase: "<<stairM(n,dp)<<" "<<stairT(n)<<"\n";
+    vector<int>c={10,15,20}; dp.assign(c.size()+1,-1);
+    cout<<"MinCost: "<<minCostM(0,c,dp)<<" "<<minCostT(c)<<"\n";
+    auto v=countBits(5); cout<<"CountBits: "; for(int x:v) cout<<x<<" "; cout<<"\n";
+    n=12; dp.assign(n+1,-1);
+    cout<<"PerfectSq: "<<sqM(n,dp)<<" "<<sqT(n);
+}
