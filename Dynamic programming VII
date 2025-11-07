@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Longest Palindromic Subsequence
+int LPS(string s){
+    string r=s; reverse(r.begin(),r.end());
+    int n=s.size(); vector<vector<int>>dp(n+1,vector<int>(n+1,0));
+    for(int i=1;i<=n;i++) for(int j=1;j<=n;j++)
+        dp[i][j]=(s[i-1]==r[j-1])?1+dp[i-1][j-1]:max(dp[i-1][j],dp[i][j-1]);
+    return dp[n][n];
+}
+
+// 2️⃣ Longest Palindromic Substring
+string LPSstr(string s){
+    int n=s.size(), st=0,len=1; vector<vector<int>>dp(n,vector<int>(n,0));
+    for(int i=n-1;i>=0;i--) for(int j=i;j<n;j++)
+        if(s[i]==s[j] && (j-i<2||dp[i+1][j-1]))
+            dp[i][j]=1, len=max(len,j-i+1), st=i;
+    return s.substr(st,len);
+}
+
+int main(){
+    string s="bbbab";
+    cout<<"LPS length:"<<LPS(s)<<"\n";
+    cout<<"Longest Pal Substring:"<<LPSstr("babad");
+}
