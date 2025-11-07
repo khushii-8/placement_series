@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// 1️⃣ Coin Change (Min Coins)
+int ccM(int t,vector<int>&c,vector<int>&dp){
+    if(t==0) return 0; if(t<0) return 1e9;
+    if(dp[t]!=-1) return dp[t];
+    int ans=1e9; for(int x:c) ans=min(ans,1+ccM(t-x,c,dp));
+    return dp[t]=ans;
+}
+int ccT(vector<int>&c,int t){
+    vector<int>dp(t+1,1e9); dp[0]=0;
+    for(int i=1;i<=t;i++) for(int x:c)
+        if(i>=x) dp[i]=min(dp[i],1+dp[i-x]);
+    return dp[t];
+}
+
+// 2️⃣ Coin Change 2 (Count Ways)
+int cc2M(int i,int t,vector<int>&c,vector<vector<int>>&dp){
+    if(t==0) return 1; if(i==0) return t%c[0]==0;
+    if(dp[i][t]!=-1) return dp[i][t];
+    int notTake=cc2M(i-1,t,c,dp);
+    int take=t>=c[i]?cc2M(i,t-c[i],c,dp):0;
+    return dp[i][t]=take+notTake;
+}
+int cc2T(vector<int>&c,int t){
+    int n=c.size(); vector<vector<int>>dp(n,vector<int>(t+1));
+    for(int i=0;i<=t;i++) dp[0][i]=(i%c[0]==0);
+    for(int i=1;i<n;i++) for(int j=0;j<=t;j++){
+        int notTake=dp[i-1][j], take=j>=c[i]?dp[i][j-c[i]]:0;
+        dp[i][j]=take+notTake;
+    }
+    return dp[n-1][t];
+}
+
+// 3️⃣ Jump Game (can reach end?)
+bool canJump(vector<int>&a){
+    int reach=0;
+    for(int i=0;i<a.size();i++){
+        if(i>reach) return 0;
+        reach=max(reach,i+a[i]);
+    }
+    return 1;
+}
+
+// 4️⃣ Jump Game II (min jumps)
+int jump2(vector<int>&a){
+    int jump=0,currEnd=0,farthest=0;
+    for(int i=0;i<a.size()-1;i++){
+        farthest=max(farthest,i+a[i]);
+        if(i==currEnd){ jump++; currEnd=farthest; }
+    }
+    return jump;
+}
+
+int main(){
+    vector<int>c={1,2,5}; int t=11; vector<int>dp(t+1,-1);
+    cout<<"CoinChange:"<<ccM(t,c,dp)<<" "<<ccT(c,t)<<"\n";
+    vector<vector<int>>d(c.size(),vector<int>(t+1,-1));
+    cout<<"CoinChange2:"<<cc2M(c.size()-1,t,c,d)<<" "<<cc2T(c,t)<<"\n";
+    vector<int>a={2,3,1,1,4};
+    cout<<"CanJump:"<<canJump(a)<<"\n";
+    cout<<"MinJumps:"<<jump2(a);
+}
